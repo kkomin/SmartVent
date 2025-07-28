@@ -1,7 +1,26 @@
-// package는 나중에 다시 추가
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <curl/curl.h>
 
-void fetch_weather(const char *api_key) {
-    // libcurl로 요청 -> 응답 받아오기
-    // 응답 JSON 파싱
-    // 온도, 습도, 미세먼지 등 추출
+// api 응답 데이터 저장할 구조체 정의
+struct Memory {
+    char *response;     // 응답 데이터 저장할 문자열
+    size_t size;        // 현재 데이터 크기
+};
+
+int main() {
+    // 메모리 초기화
+
+    // libcurl 초기화
+
+    // api url 설정
+    
+
+    // 요청 옵션 설정
+
+
+    // libcurl 종료
+
+    return 0;
 }
