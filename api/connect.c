@@ -15,13 +15,14 @@ int main() {
     CURLcode res;           // CURL 요청 결과
     struct Memory chunk;    // 응답 저장 구조체
     
-
     // 메모리 초기화
     chunk.response = malloc(1);
     chunk.size = 0;
 
     // libcurl 초기화
     curl_global_init(CURL_GLOBAL_DEFAULT);      // curl 라이브러리 전체 초기화
+    
+    // curl 핸들 생성 -> 요청 준비 단계
     curl = curl_easy_init();                    // 요청 객체 생성
 
     // api url 설정
@@ -30,7 +31,6 @@ int main() {
     
     getApiKey(api_key, sizeof(api_key));
     
-    // printf("api key : %s\n", api_key);
     if(curl) {
         const char *api = api_key;
         // 위도, 경도 설정 (대전대 인사관)
@@ -39,14 +39,31 @@ int main() {
         char url[256];
 
         snprintf(url, sizeof(url), "https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s", lat, lon, api);
+        printf("요청할 URL: %s\n", url);
+        
+        // 요청 옵션 설정 (요청할 url 지정)
+        curl_easy_setopt(curl, CURLOPT_URL, url);
 
-        printf("요청할 url : %s\n", url);
+        // SSL 인증 일단 무시 ㄱㄱ
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+
+        // 응답 출력
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, stdout);
+
+        // http 요청 실행
+        res = curl_easy_perform(curl);
+
+        // 요청 결과 확인
+        if(res != CURLE_OK) {
+            fprintf(stderr, "요청 실패 : %s\n", curl_easy_strerror(res));
+        }
+
+        // curl 핸들 정리
+        curl_easy_cleanup(curl);
     }
 
-    // 요청 옵션 설정
-
-
     // libcurl 종료
+    curl_global_cleanup();
 
     return 0;
 }
