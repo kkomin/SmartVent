@@ -6,7 +6,7 @@
 void parse_weather_json(const char *json_str) {
     cJSON *root = cJSON_Parse(json_str);
     if(!root) {
-        printf("JSON 파싱 오류\n");
+        printf("Weather JSON 파싱 오류\n");
         return;
     }
 
@@ -34,4 +34,6 @@ void parse_weather_json(const char *json_str) {
     // 도시 이름 출력
     char *city = cJSON_GetObjectItem(root, "name")->valuestring;
     printf("도시 : %s\n", city);
+
+    cJSON_Delete(root);
 }
