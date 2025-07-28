@@ -32,6 +32,8 @@ void parse_weather_json(const char *json_str) {
     }
 
     // 도시 이름 출력
+    char *city = cJSON_GetObjectItem(root, "name")->valuestring;
+    printf("도시 : %s\n", city);
 }
 
 int main() {
