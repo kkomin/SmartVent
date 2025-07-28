@@ -10,15 +10,22 @@ struct Memory {
     size_t size;        // 현재 데이터 크기
 };
 
+size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
+    size_t totalSize = size * nmemb;
+    char *response = (char *)userp;
+
+    // totalSize만큼 response에 복사 -> 버퍼 초과 방지용
+    strncat(response, contents, totalSize);
+
+    return totalSize;
+}
+
 int main() {
     CURL *curl;             // CURL 핸들
     CURLcode res;           // CURL 요청 결과
+    char response[4096];    // 고정 크기 버퍼 (응답 저장용임)
     struct Memory chunk;    // 응답 저장 구조체
     
-    // 메모리 초기화
-    chunk.response = malloc(1);
-    chunk.size = 0;
-
     // libcurl 초기화
     curl_global_init(CURL_GLOBAL_DEFAULT);      // curl 라이브러리 전체 초기화
     
@@ -47,8 +54,11 @@ int main() {
         // SSL 인증 일단 무시 ㄱㄱ
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 
-        // 응답 출력
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, stdout);
+        // 응답 출력 -> 콜백 함수 지정
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+
+        // 콜백 함수에 전달할 데이터를 지정
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, response);
 
         // http 요청 실행
         res = curl_easy_perform(curl);
@@ -56,6 +66,8 @@ int main() {
         // 요청 결과 확인
         if(res != CURLE_OK) {
             fprintf(stderr, "요청 실패 : %s\n", curl_easy_strerror(res));
+        } else {
+            printf("응답 데이터 : %s\n", response);
         }
 
         // curl 핸들 정리
