@@ -30,8 +30,18 @@ int main() {
     
     getApiKey(api_key, sizeof(api_key));
     
-    printf("api key : %s\n", api_key);
+    // printf("api key : %s\n", api_key);
+    if(curl) {
+        const char *api = api_key;
+        // 위도, 경도 설정 (대전대 인사관)
+        double lat = 36.336728;
+        double lon = 127.458998;
+        char url[256];
 
+        snprintf(url, sizeof(url), "https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s", lat, lon, api);
+
+        printf("요청할 url : %s\n", url);
+    }
 
     // 요청 옵션 설정
 
