@@ -3,6 +3,7 @@
 #include <string.h>
 #include <curl/curl.h>
 #include "api.h"
+#include "weather_parse.h"
 
 // api 응답 데이터 저장할 구조체 정의
 struct Memory {
@@ -80,6 +81,8 @@ int main() {
             fprintf(stderr, "요청 실패 : %s\n", curl_easy_strerror(res));
         } else {
             printf("응답 데이터 : %s\n", chunk.response);
+
+            parse_weather_json(chunk.response);
         }
 
         // 메모리 정리
