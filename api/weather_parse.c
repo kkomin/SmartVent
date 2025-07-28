@@ -11,7 +11,17 @@ void parse_weather_json(const char *json_str) {
     }
 
     // main 객체 온습도 가져오기 (temp, humidity)
+    cJSON *main_obj = cJSON_GetObjectItem(root, "main");
+    if(main_obj) {
+        double tmp_k = cJSON_GetObjectItem(main_obj, "temp") -> valuedouble;
+        // 켈빈 -> 섭씨로 변경
+        double tmp_c = tmp_k - 273.15;
 
+        int humidity = cJSON_GetObjectItem(main_obj, "humidity") -> valueint;
+
+        printf("현재 온도 : %.2f ℃\n", tmp_c);
+        printf("현재 습도 : %d\n", humidity);
+    }
 
     // weather에서 description
 
