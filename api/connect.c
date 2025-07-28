@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <curl/curl.h>
+#include "api.h"
 
 // api 응답 데이터 저장할 구조체 정의
 struct Memory {
@@ -13,6 +14,7 @@ int main() {
     CURL *curl;             // CURL 핸들
     CURLcode res;           // CURL 요청 결과
     struct Memory chunk;    // 응답 저장 구조체
+    
 
     // 메모리 초기화
     chunk.response = malloc(1);
@@ -23,6 +25,13 @@ int main() {
     curl = curl_easy_init();                    // 요청 객체 생성
 
     // api url 설정
+    char api_key[128];
+    memset(api_key, 0, sizeof(api_key));
+    
+    getApiKey(api_key, sizeof(api_key));
+    
+    printf("api key : %s\n", api_key);
+
 
     // 요청 옵션 설정
 
