@@ -24,6 +24,12 @@ void parse_weather_json(const char *json_str) {
     }
 
     // weather에서 description
+    cJSON *weather_arr = cJSON_GetObjectItem(root, "weather");
+    if(weather_arr && cJSON_GetArraySize(weather_arr) > 0) {
+        cJSON *first_weather = cJSON_GetArrayItem(weather_arr, 0);
+        char *description = cJSON_GetObjectItem(first_weather, "description")->valuestring;
+        printf("날씨 상태 : %s\n", description);
+    }
 
     // 도시 이름 출력
 }
