@@ -5,6 +5,7 @@
 #include "db/connect_db.h"
 #include "db/get_db_config.h"
 #include "include/api.h"
+#include "include/timestamp.h"
 
 void main() {
     // DB 연결 -> 성공 여부 확인
@@ -15,8 +16,10 @@ void main() {
     double lon = 126.978;  // 예시: 서울의 경도
     call_api(lat, lon);
 
-    // 8. 현재 시간 정보 생성 -> DB에 저장할 거
-
+    // 현재 시간 정보 생성 -> DB에 저장할 거
+    char timestamp[20];
+    get_current_timestamp(timestamp, sizeof(timestamp));
+    
     // 9. DB 저장 -> 파싱한 데이터, 타임스탬프 -> environment_data 테이블에 저장
 
     // 10. 시스템 로그 저장 -> 저장 성공 여부 및 동작 로그 -> system_logs 테이블에 기록
