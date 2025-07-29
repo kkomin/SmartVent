@@ -85,6 +85,9 @@ int call_api(double lat, double lon) {
     // db에 요청 로직 결과 저장용
     int result = 0;
 
+    // 구조체 변수 선언
+    WeatherData weather_data;
+
     snprintf(weather_url, sizeof(weather_url), "https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s", lat, lon, api_key);
 
     snprintf(air_url, sizeof(air_url), "http://api.openweathermap.org/data/2.5/air_pollution?lat=%f&lon=%f&appid=%s", lat, lon, api_key);
@@ -92,7 +95,7 @@ int call_api(double lat, double lon) {
     // 날씨 데이터 호출 및 파싱
     if(fetch_api_data(weather_url, &response) == 0) {
         printf("날씨 데이터 응답 : %s\n", response);
-        parse_weather_json(response);
+        parse_weather_json(response, &weather_data);
         free(response);
     } else {
         result = -1;
@@ -101,7 +104,7 @@ int call_api(double lat, double lon) {
     // 미세먼지 데이터 호출 및 파싱
     if(fetch_api_data(air_url, &response) == 0) {
         printf("미세먼지 데이터 응답 : %s\n", response);
-        parse_air_json(response);
+        parse_air_json(response, &weather_data);
         free(response);
     } else {
         result = -1;

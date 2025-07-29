@@ -19,8 +19,10 @@ void main() {
     // 현재 시간 정보 생성 -> DB에 저장할 거
     char timestamp[20];
     get_current_timestamp(timestamp, sizeof(timestamp));
-    
-    // 9. DB 저장 -> 파싱한 데이터, 타임스탬프 -> environment_data 테이블에 저장
+
+    // DB 저장 -> 파싱한 데이터, 타임스탬프 -> environment_data 테이블에 저장
+    // MYSQL *conn, const char *timestamp, float tmp_in, float hum_in, float tmp_out, float hum_out, float pm25, float pm10, const char *weather_desc, int vent_status
+    save_environment_data();
 
     // 10. 시스템 로그 저장 -> 저장 성공 여부 및 동작 로그 -> system_logs 테이블에 기록
 

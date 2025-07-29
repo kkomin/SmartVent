@@ -1,6 +1,6 @@
 #ifndef WEATHER_PARSE_H
 #define WEATHER_PARSE_H
 
-void parse_weather_json(const char *json_str);
+void parse_weather_json(const char *json_str, WeatherData *weather_data);
 
 #endif
