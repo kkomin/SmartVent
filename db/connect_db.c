@@ -4,7 +4,7 @@
 
 MYSQL *conn;
 
-void connect_db() {
+MYSQL *connect_db() {
     char host[100], user[100], pass[100], db[100];
     unsigned int port = 0;
 
