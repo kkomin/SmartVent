@@ -1,11 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <mariadb/mysql.h>
+#include "db/connect_db.h"
+#include "db/get_db_config.h"
 
 void main() {
     // 1. DB 연결 -> 성공 여부 확인
-
-    // 2. API 키 읽기
+    connect_db();
 
     // 3. 위치 정보 설정 -> 위도, 경도 값 변수 할당 -> 정해진 위도 경도 값 수정
 
@@ -24,7 +26,10 @@ void main() {
     // 10. 시스템 로그 저장 -> 저장 성공 여부 및 동작 로그 -> system_logs 테이블에 기록
 
     // 11. DB 연결 종료 -> 자원 해제
+    mysql_close(conn);
+    printf("DB 연결 종료\n");
 
     // 12. 메모리 정리 -> 동적 메모리 해제
-
+    
+    return 0;
 }
