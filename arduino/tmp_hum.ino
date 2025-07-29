@@ -10,8 +10,12 @@ DHT dht(DHTPIN, DHTTYPE);    // DHT 센서 객체 생성
 
 void setup() {
     // Serial 통신 시작
+    Serial.begin(9600);
     // DHT 센서 시작
+    dnt.begin();
     // LED 핀을 출력으로 설정
+    pinMode(LEDPIN, OUTPUT);
+    digitalWrite(LEDPIN, LOW);  // 초기 LED OFF
 }
 
 void loop() {
