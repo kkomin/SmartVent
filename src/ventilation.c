@@ -20,11 +20,11 @@ int pm10_level(float pm10) {
 
 // 공기질 상태 판단 (초미세먼지, 미세먼지)
 int air_quality(float pm25, float pm10) {
-    int pm25 = pm25_level;
-    int pm10 = pm10_level;
+    int level25 = pm25_level;
+    int level10 = pm10_level;
 
     // 수치 중 하나라도 나쁨(4) 이상이면 환기 제한
-    if(pm25 <= 3 && pm10 <= 3) {
+    if(level25 <= 3 && level10 <= 3) {
         return 1;       // 환기 가능
     } else {
         return 0;       // 환기 불가
@@ -40,5 +40,9 @@ int auto_vent(float tmp_in, float hum_in, float tmp_out, float hum_out, float pm
     int can_vent = (tmp_out < tmp_in) && air_quality(pm25, pm10);
     
     // 두 조건 다 만족 -> return 1 (ON) / 아니면 return 0 (OFF)
-    return 0; // 자동 환기 불필요
+    if(need_vent && can_vent) {
+        return 1;
+    } else {
+        return 0; // 자동 환기 불필요
+    }
 }
