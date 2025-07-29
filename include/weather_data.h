@@ -8,6 +8,7 @@ typedef struct {
     float hum_out;
     char weather_desc[50];
     char city[50];
+    AirData air;
 } WeatherData;
 
 typedef struct {
