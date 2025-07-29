@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
-#include <termious.h>
+#include <termios.h>
 #include <unistd.h>
 #include "weather_data.h"
 
-#define SERIAL_PROT ttyUSB0     // 아두이노가 연결된 포트 -> 내일 다시 확인 후 수정
+#define SERIAL_PROT "/dev/ttyUSB0"     // 아두이노가 연결된 포트 -> 내일 다시 확인 후 수정
 
 int read_serial_data(WeatherData *data) {
     int serial_port;
@@ -14,7 +14,7 @@ int read_serial_data(WeatherData *data) {
     char buffer[256];
 
     // 시리얼 데이터 받아오기 (시리얼 포트 열기)
-    serial_port = open(SERIAL_PROT, O_RDWR | Q_NOCTTY );
+    serial_port = open(SERIAL_PROT, O_RDWR | O_NOCTTY );
     if(serial_port < 0) {
         perror("시리얼 포트 열기 실패\n");
         return -1;
@@ -46,7 +46,7 @@ int read_serial_data(WeatherData *data) {
     if(n>0) {
         // 문자열 파싱
         float tmp_in, hum_in;
-        if(scanf(buffer, "%f, %f", &tmp_in, &hum_in) == 2) {
+        if(sscanf(buffer, "%f, %f", &tmp_in, &hum_in) == 2) {
             // weatherdata.h의 구조체에 tmp_in, hum_in 저장
             data->tmp_in = tmp_in;
             data->hum_in = hum_in;
