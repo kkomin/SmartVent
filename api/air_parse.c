@@ -3,7 +3,7 @@
 #include <string.h>
 #include <cjson/cJSON.h>
 
-void parse_air_json(const char *json_str) {
+void parse_air_json(const char *json_str, AirData *air_data) {
     // json 파싱
     cJSON *root = cJSON_Parse(json_str);
     if(!root) {
@@ -22,6 +22,10 @@ void parse_air_json(const char *json_str) {
             // components 내 pm2_5, pm10 값 읽기
             double pm2_5 = cJSON_GetObjectItem(components, "pm2_5") -> valuedouble;
             double pm10 = cJSON_GetObjectItem(components, "pm10") -> valuedouble;
+
+            // 파싱한 값 구조체 변수에 저장
+            air_data->pm25 = (float)pm2_5;
+            air_data->pm10 = (float)pm10;
 
             // 읽은 값 변수에 저장하거나 출력
             printf("초미세먼지 : %.2f\n", pm2_5);

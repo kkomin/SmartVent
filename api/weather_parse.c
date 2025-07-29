@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cjson/cJSON.h>
+#include "include/weather_data.h"
 
-void parse_weather_json(const char *json_str) {
+void parse_weather_json(const char *json_str, WeatherData weather_data) {
     cJSON *root = cJSON_Parse(json_str);
     if(!root) {
         printf("Weather JSON 파싱 오류\n");
@@ -19,6 +20,8 @@ void parse_weather_json(const char *json_str) {
 
         int humidity = cJSON_GetObjectItem(main_obj, "humidity") -> valueint;
 
+        weather_data->tmp_out = (float)tmp_c;
+        weather_data->hum_out = humidity;
         printf("현재 온도 : %.2f ℃\n", tmp_c);
         printf("현재 습도 : %d\n", humidity);
     }
@@ -28,11 +31,15 @@ void parse_weather_json(const char *json_str) {
     if(weather_arr && cJSON_GetArraySize(weather_arr) > 0) {
         cJSON *first_weather = cJSON_GetArrayItem(weather_arr, 0);
         char *description = cJSON_GetObjectItem(first_weather, "description")->valuestring;
+        strncpy(weather_data->weather_desc, description, sizeof(weather_data->weather_desc)-1);
+        weather_data->weather_desc[sizeof(weather_data)->weather_desc - 1] = '\0';
         printf("날씨 상태 : %s\n", description);
     }
 
     // 도시 이름 출력
     char *city = cJSON_GetObjectItem(root, "name")->valuestring;
+    strncpy(weather_data->city, city, sizeof(weather_data->city)-1);
+    weather_data->city[sizeof(weather_data->city) - 1] = '\0';
     printf("도시 : %s\n", city);
 
     cJSON_Delete(root);
