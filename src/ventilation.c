@@ -20,6 +20,15 @@ int pm10_level(float pm10) {
 
 // 공기질 상태 판단 (초미세먼지, 미세먼지)
 int air_quality(float pm25, float pm10) {
+    int pm25 = pm25_level;
+    int pm10 = pm10_level;
+
+    // 수치 중 하나라도 나쁨(4) 이상이면 환기 제한
+    if(pm25 <= 3 && pm10 <= 3) {
+        return 1;       // 환기 가능
+    } else {
+        return 0;       // 환기 불가
+    }
 }
 
 // 자동 환기 판단 (실내 온습도 불쾌 -> need_vent, 실외 온습도/미세먼지 -> can_vent)
