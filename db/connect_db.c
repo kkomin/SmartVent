@@ -1,8 +1,8 @@
-#include <mysql/mysql.h>
+#include <mariadb/mysql.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-MySQL *conn;
+MYSQL *conn;
 
 void connect_db() {
     conn = mysql_init(NULL);
