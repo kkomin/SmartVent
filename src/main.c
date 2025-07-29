@@ -4,20 +4,16 @@
 #include <mariadb/mysql.h>
 #include "db/connect_db.h"
 #include "db/get_db_config.h"
+#include "include/api.h"
 
 void main() {
-    // 1. DB 연결 -> 성공 여부 확인
+    // DB 연결 -> 성공 여부 확인
     connect_db();
 
-    // 3. 위치 정보 설정 -> 위도, 경도 값 변수 할당 -> 정해진 위도 경도 값 수정
-
-    // 4. API 요청 URL 생성 -> 날씨 정보와 미세먼지 정보 호출할 URL 문자열 생성
-
-    // 5. 날씨 API 호출
-
-    // 6. 미세먼지 API 호출
-
-    // 7. JSON 파싱
+    // 위치 정보 설정 -> 위도, 경도 값 변수 할당 -> 정해진 위도 경도 값 수정
+    double lat = 37.5665;  // 예시: 서울의 위도
+    double lon = 126.978;  // 예시: 서울의 경도
+    call_api(lat, lon);
 
     // 8. 현재 시간 정보 생성 -> DB에 저장할 거
 

@@ -72,18 +72,18 @@ int fetch_api_data(const char *url, char **response_out) {
     return 0;
 }
 
-int main() {
+int call_api(double lat, double lon) {
     // api url 설정
     char api_key[128];
     getApiKey(api_key, sizeof(api_key));
-    
-    double lat = 36.336728;
-    double lon = 127.458998;
 
     char weather_url[256];
     char air_url[256];
 
     char *response = NULL;
+
+    // db에 요청 로직 결과 저장용
+    int result = 0;
 
     snprintf(weather_url, sizeof(weather_url), "https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s", lat, lon, api_key);
 
@@ -94,6 +94,8 @@ int main() {
         printf("날씨 데이터 응답 : %s\n", response);
         parse_weather_json(response);
         free(response);
+    } else {
+        result = -1;
     }
 
     // 미세먼지 데이터 호출 및 파싱
@@ -101,7 +103,9 @@ int main() {
         printf("미세먼지 데이터 응답 : %s\n", response);
         parse_air_json(response);
         free(response);
+    } else {
+        result = -1;
     }
         
-    return 0;
+    return result;
 }
