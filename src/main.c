@@ -70,8 +70,10 @@ int main() {
             int data_id = save_environment_data(conn, timestamp, data.tmp_in, data.hum_in, data.tmp_out, data.hum_out, data.air.pm25, data.air.pm10, data.weather_desc, vent_status);
             
             // 저장 쿼리와 결과 확인용 출력
-            printf("[DEBUG] save_environment_data 반환값: %d\n", data_id);
+            printf("[DEBUG] save_environment_data 반환값: %d\n\n", data_id);
 
+            printf("[INFO] 날씨 상태 : %s\n\n", data.weather_desc);
+            printf("[DATA] 실내 온도 : %.2f, 실내 습도 : %.2f\n", data.tmp_in, data.hum_in);
             printf("[DATA] 실내 온도 : %.2f, 실내 습도 : %.2f\n", data.tmp_in, data.hum_in);
             printf("[DATA] 실외 온도 : %.2f, 실외 습도 : %.2f\n", data.tmp_out, data.hum_out);
             printf("[DATA] 미세먼지 : %.2f, 초미세먼지 : %.2f\n", data.air.pm10, data.air.pm25);
@@ -88,7 +90,7 @@ int main() {
                 
                 // 시스템 로그 저장 -> 저장 성공 여부 및 동작 로그 -> system_logs 테이블에 기록
                 save_system_log(conn, timestamp, log_message, "INFO", "environment_data", data_id);
-                printf("[INFO] %s\n", log_message); // 성공 메시지 출력
+                // printf("[MESSAGE] %s\n", log_message); // 성공 메시지 출력
             } else {
                 // 실패 시 log 저장
                 save_system_log(conn, timestamp, log_message, "ERROR", "environment_data", -1);
