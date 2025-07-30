@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cjson/cJSON.h>
+#include "weather_data.h"
+#include "air_parse.h"
 
 void parse_air_json(const char *json_str, AirData *air_data) {
     // json 파싱

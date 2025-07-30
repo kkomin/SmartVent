@@ -4,7 +4,7 @@
 #include "api.h"
 
 void getApiKey(char *apiKey, size_t size) {
-    FILE *file = fopen("config.txt", "r");
+    FILE *file = fopen("api/config.txt", "r");
 
     if(!file) {
         perror("API 키 파일을 열 수 없습니다.");

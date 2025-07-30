@@ -20,8 +20,8 @@ int pm10_level(float pm10) {
 
 // 공기질 상태 판단 (초미세먼지, 미세먼지)
 int air_quality(float pm25, float pm10) {
-    int level25 = pm25_level;
-    int level10 = pm10_level;
+    int level25 = pm25_level(pm25);
+    int level10 = pm10_level(pm10);
 
     // 수치 중 하나라도 나쁨(4) 이상이면 환기 제한
     if(level25 <= 3 && level10 <= 3) {

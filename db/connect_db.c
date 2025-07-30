@@ -1,6 +1,7 @@
 #include <mariadb/mysql.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "get_db.h"
 
 MYSQL *conn;
 
@@ -9,7 +10,7 @@ MYSQL *connect_db() {
     unsigned int port = 0;
 
     // db 정보 가져오기
-    get_db_config(host, user, pass, db, port);
+    get_db_config(host, user, pass, db, &port);
 
     conn = mysql_init(NULL);
     if(conn == NULL) {
