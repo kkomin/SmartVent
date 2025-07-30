@@ -60,8 +60,8 @@ int main() {
             int vent_status = auto_vent(data.tmp_in, data.hum_in, data.tmp_out, data.hum_out, data.air.pm25, data.air.pm10);
             
             // 디버깅 출력
-            printf("[DEBUG] 시리얼 데이터 - tmp_in: %.2f, hum_in: %.2f, tmp_out: %.2f, hum_out: %.2f\n",
-            data.tmp_in, data.hum_in, data.tmp_out, data.hum_out);
+            // printf("[DEBUG] 시리얼 데이터 - tmp_in: %.2f, hum_in: %.2f, tmp_out: %.2f, hum_out: %.2f\n",
+            // data.tmp_in, data.hum_in, data.tmp_out, data.hum_out);
             
             // 로그 메세지용 변수 선언
             char log_message[256];
@@ -71,11 +71,21 @@ int main() {
             
             // 저장 쿼리와 결과 확인용 출력
             printf("[DEBUG] save_environment_data 반환값: %d\n", data_id);
-            
-                
+
+            printf("[DATA] 실내 온도 : %.2f, 실내 습도 : %.2f\n", data.tmp_in, data.hum_in);
+            printf("[DATA] 실외 온도 : %.2f, 실외 습도 : %.2f\n", data.tmp_out, data.hum_out);
+            printf("[DATA] 미세먼지 : %.2f, 초미세먼지 : %.2f\n", data.air.pm10, data.air.pm25);
+
+            if (vent_status == 1) {
+                printf("[VENT] 환기 상태: ON (LED 켜짐)\n");
+            } else {
+                printf("[VENT] 환기 상태: OFF (LED 꺼짐)\n");
+            }
+
             if (data_id > 0) {
                 // 성공 시 log 저장
-                snprintf(log_message, sizeof(log_message), "데이터 저장 완료 (vent_status : %d)", vent_status);
+                snprintf(log_message, sizeof(log_message), "%s", vent_status==1 ? "환기 시작" : "환기 정지");
+                
                 // 시스템 로그 저장 -> 저장 성공 여부 및 동작 로그 -> system_logs 테이블에 기록
                 save_system_log(conn, timestamp, log_message, "INFO", "environment_data", data_id);
                 printf("[INFO] %s\n", log_message); // 성공 메시지 출력
@@ -85,9 +95,9 @@ int main() {
                 fprintf(stderr, "[ERROR] %s\n", log_message); // 실패 메시지 출력
             }
                 
-
             // 아두이노에 vent_status 신호 전송 (LED 제어)
             serial_write(vent_status == 1 ? '1' : '0');
+
         } else {
             fprintf(stderr, "[ERROR] 시리얼 데이터 읽기 실패\n");
         }
