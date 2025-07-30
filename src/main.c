@@ -52,11 +52,7 @@ void main() {
                 
 
             // 아두이노에 vent_status 신호 전송 (LED 제어)
-            if(vent_status == 1) {
-                serial_write('1');
-            } else {
-                serial_write('0');
-            }
+            serial_write(vent_status == 1 ? '1' : '0');
         }
 
         // 5분(300초) 대기
@@ -66,8 +62,6 @@ void main() {
     // DB 연결 종료 -> 자원 해제
     mysql_close(conn);
     printf("DB 연결 종료\n");
-    
-    // 메모리 정리 -> 동적 메모리 해제
     
     return 0;
 }
