@@ -14,3 +14,17 @@ int save_environment_data(MYSQL *conn, const char *timestamp, float tmp_in, floa
     }
     return 0;
 }
+
+int save_system_log(MYSQL *conn, const char *timestamp, const char *log_message,  const char *log_level, const char *related_table, int related_id) {
+    char query[1024];
+    snprintf(query, sizeof(query),
+    "INSERT INTO system_logs (log_time, message, log_level, related_table, related_id) "
+    "VALUES ('%s', '%s', '%s', '%s', %d)",
+    timestamp, message, log_level, related_table, related_id);
+
+    if(mysql_query(conn, query)) {
+        fprintf(stderr, "쿼리 실행 실패 : %s\n", mysql_error(conn));
+        return -1;
+    }
+    return 0;
+}
