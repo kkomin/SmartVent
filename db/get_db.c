@@ -3,7 +3,7 @@
 #include <string.h>
 
 void get_db_config(char *host, char *user, char *pass, char *db, unsigned int *port) {
-    FILE *file = fopen("db_config.txt", "r");
+    FILE *file = fopen("db/db_config.txt", "r");
     if (!file) {
         perror("DB 설정 파일 열기 실패");
         exit(1);
