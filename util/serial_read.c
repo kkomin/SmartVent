@@ -27,6 +27,7 @@ int open_serial_port(const char *port_name) {
 
     cfsetispeed(&tty, B9600);
     cfsetospeed(&tty, B9600);
+    tcsetattr(fd, TCSANOW, &tty);
 
     tty.c_cc[VMIN] = 0;      // 최소 0 바이트 읽기 (비차단)
     tty.c_cc[VTIME] = 10;    // 1초(10*0.1s) 타임아웃
@@ -79,7 +80,7 @@ int read_serial_data(int fd, WeatherData *data) {
 
     printf("[DEBUG] 수신 문자열: %s\n", buffer);
 
-    if (sscanf(buffer, "%f , %f", &data->tmp_in, &data->hum_in) == 2 || 
+    if (sscanf(buffer, "%f, %f", &data->tmp_in, &data->hum_in) == 2 || 
         sscanf(buffer, "%f,%f", &data->tmp_in, &data->hum_in) == 2) {
         return 0;
     }

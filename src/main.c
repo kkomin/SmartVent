@@ -71,9 +71,9 @@ int main() {
             
             // 저장 쿼리와 결과 확인용 출력
             printf("[DEBUG] save_environment_data 반환값: %d\n\n", data_id);
+            printf("[DEBUG] 시리얼로 읽은 실내 온도: %.2f\n", data.tmp_in);
 
             printf("[INFO] 날씨 상태 : %s\n\n", data.weather_desc);
-            printf("[DATA] 실내 온도 : %.2f, 실내 습도 : %.2f\n", data.tmp_in, data.hum_in);
             printf("[DATA] 실내 온도 : %.2f, 실내 습도 : %.2f\n", data.tmp_in, data.hum_in);
             printf("[DATA] 실외 온도 : %.2f, 실외 습도 : %.2f\n", data.tmp_out, data.hum_out);
             printf("[DATA] 미세먼지 : %.2f, 초미세먼지 : %.2f\n", data.air.pm10, data.air.pm25);
@@ -105,7 +105,7 @@ int main() {
         }
 
         // 5분(300초) 대기
-        sleep(300);
+        sleep(180);
     }
 
     // 시리얼 포트 닫기
