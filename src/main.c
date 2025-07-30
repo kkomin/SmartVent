@@ -34,7 +34,22 @@ void main() {
         // MYSQL *conn, const char *timestamp, float tmp_in, float hum_in, float tmp_out, float hum_out, float pm25, float pm10, const char *weather_desc, int vent_status
         if(read_serial_data(&data) == 0) {
             int vent_status = auto_vent(data.tmp_in, data.hum_in, data.tmp_out, data.hum_out, data.air.pm25, data.air.pm10);
-            save_environment_data(conn, timestamp, weather_data.tmp_in, weather_data.hum_in, weather_data.tmp_out, weather_data.hum_out, air_data.pm25, air_data.pm10, weather_data.weather_desc, vent_status);
+            
+            // 로그 메세지용 변수 선언
+            char log_message[256];
+
+            int data_id = save_environment_data(conn, timestamp, weather_data.tmp_in, weather_data.hum_in, weather_data.tmp_out, weather_data.hum_out, air_data.pm25, air_data.pm10, weather_data.weather_desc, vent_status);
+
+            if (data_id > 0) {
+                // 성공 시 log 저장
+                snprintf(log_message, sizeof(log_message), "데이터 저장 완료 (vent_status : %d)", vent_status);
+                // 시스템 로그 저장 -> 저장 성공 여부 및 동작 로그 -> system_logs 테이블에 기록
+                save_system_log(conn, timestamp, log_message, "INFO", "environment_data", data_id);
+            } else {
+                // 실패 시 log 저장
+                save_system_log(conn, timestamp, log_message, "ERROR", "environment_data", -1);
+            }
+                
 
             // 아두이노에 vent_status 신호 전송 (LED 제어)
             if(vent_status == 1) {
@@ -44,9 +59,6 @@ void main() {
             }
         }
 
-        // 시스템 로그 저장 -> 저장 성공 여부 및 동작 로그 -> system_logs 테이블에 기록
-        // 이건 나중에 조건에 따라 on/off까지 구현 후에 구현
-        
         // 5분(300초) 대기
         sleep(300);
     }
