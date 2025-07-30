@@ -1,5 +1,5 @@
-#ifndef DATA_STRUCT_H
-#define DATA_STRUCT_H
+#ifndef WEATHER_DATA_H
+#define WEATHER_DATA_H
 
 typedef struct {
     float pm25;

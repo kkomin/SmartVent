@@ -104,7 +104,7 @@ int call_api(double lat, double lon) {
     // 미세먼지 데이터 호출 및 파싱
     if(fetch_api_data(air_url, &response) == 0) {
         printf("미세먼지 데이터 응답 : %s\n", response);
-        parse_air_json(response, &weather_data);
+        parse_air_json(response, &weather_data.air);
         free(response);
     } else {
         result = -1;

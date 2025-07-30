@@ -12,7 +12,7 @@
 #include "ventilation.h"
 #include "serial_read.h"
 
-MYSQL *conn;
+extern MYSQL *conn;
 
 int main() {
     // DB 연결 -> 성공 여부 확인

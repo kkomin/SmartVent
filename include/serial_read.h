@@ -1,5 +1,5 @@
-#ifndef API_H
-#define API_H
+#ifndef SERIAL_READ_H
+#define SERIAL_READ_H
 
 #include "weather_data.h"
 

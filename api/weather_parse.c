@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cjson/cJSON.h>
-#include "include/weather_data.h"
+#include "weather_data.h"
 
-void parse_weather_json(const char *json_str, WeatherData weather_data) {
+void parse_weather_json(const char *json_str, WeatherData *weather_data) {
     cJSON *root = cJSON_Parse(json_str);
     if(!root) {
         printf("Weather JSON 파싱 오류\n");
