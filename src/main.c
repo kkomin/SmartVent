@@ -3,16 +3,18 @@
 #include <string.h>
 #include <unistd.h>
 #include <mariadb/mysql.h>
-#include "db/connect_db.h"
-#include "db/get_db_config.h"
-#include "include/api.h"
-#include "include/timestamp.h"
+#include "connect_db.h"
+#include "get_db.h"
+#include "save_db.h"
+#include "api.h"
+#include "time_util.h"
 #include "weather_data.h"
 #include "ventilation.h"
+#include "serial_read.h"
 
 MYSQL *conn;
 
-void main() {
+int main() {
     // DB 연결 -> 성공 여부 확인
     conn = connect_db();
 
@@ -38,7 +40,7 @@ void main() {
             // 로그 메세지용 변수 선언
             char log_message[256];
 
-            int data_id = save_environment_data(conn, timestamp, weather_data.tmp_in, weather_data.hum_in, weather_data.tmp_out, weather_data.hum_out, air_data.pm25, air_data.pm10, weather_data.weather_desc, vent_status);
+            int data_id = save_environment_data(conn, timestamp, data.tmp_in, data.hum_in, data.tmp_out, data.hum_out, data.air.pm25, data.air.pm10, data.weather_desc, vent_status);
 
             if (data_id > 0) {
                 // 성공 시 log 저장

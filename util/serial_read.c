@@ -8,6 +8,7 @@
 
 #define SERIAL_PROT "/dev/ttyACM0"     // 아두이노가 연결된 포트
 
+// 시리얼 포트에서 온습도 데이터 읽기
 int read_serial_data(WeatherData *data) {
     int serial_port;
     struct termios tty;
@@ -58,4 +59,35 @@ int read_serial_data(WeatherData *data) {
     
     close(serial_port);
     return -1;
+}
+
+
+// 시리얼 포트에 상태 전송 (환기 상태 ON/OFF)
+void serial_write(char status) {
+    int serial_port = open(SERIAL_PROT, O_RDWR | O_NOCTTY );
+    if (serial_port < 0) {
+        perror("시리얼 포트 열기 실패\n");
+        return;
+    }
+
+    // 시리얼 포트 속성 설정 (read와 동일하게 적용)
+    struct termios tty;
+    memset(&tty, 0, sizeof tty);
+    tcgetattr(serial_port, &tty);
+    cfsetispeed(&tty, B9600);
+    cfsetospeed(&tty, B9600);
+    tty.c_cflag |= (CLOCAL | CREAD);
+    tty.c_cflag &= ~CSIZE;
+    tty.c_cflag |= CS8;
+    tty.c_cflag &= ~PARENB;
+    tty.c_cflag &= ~CSTOPB;
+    tty.c_cflag &= ~CRTSCTS;
+    tty.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+    tty.c_iflag &= ~(IXON | IXOFF | IXANY);
+    tty.c_oflag &= ~OPOST;
+    tcsetattr(serial_port, TCSANOW, &tty);
+
+    // 1바이트 전송
+    write(serial_port, &status, 1);
+    close(serial_port);
 }

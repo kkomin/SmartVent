@@ -5,4 +5,6 @@
 
 int read_serial_data(WeatherData *data);
 
+void serial_write(char status);
+
 #endif

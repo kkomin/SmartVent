@@ -2,6 +2,11 @@
 #define DATA_STRUCT_H
 
 typedef struct {
+    float pm25;
+    float pm10;
+} AirData;
+
+typedef struct {
     float tmp_in;
     int hum_in;
     float tmp_out;
@@ -10,10 +15,5 @@ typedef struct {
     char city[50];
     AirData air;
 } WeatherData;
-
-typedef struct {
-    float pm25;
-    float pm10;
-} AirData;
 
 #endif
