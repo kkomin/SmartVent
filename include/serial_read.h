@@ -15,4 +15,6 @@ void serial_write(char status);
 
 void close_serial_port(int fd);
 
+int read_line(int fd, char *buffer, size_t max_len);
+
 #endif

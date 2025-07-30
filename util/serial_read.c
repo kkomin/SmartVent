@@ -51,51 +51,38 @@ int open_serial_port(const char *port_name) {
     return fd;
 }
 
+int read_line(int fd, char *buffer, size_t max_len) {
+    size_t idx = 0;
+    char ch;
+    while (idx < max_len - 1) {
+        int n = read(fd, &ch, 1);
+        if (n == 1) {
+            if (ch == '\n') break;
+            if (ch != '\r') buffer[idx++] = ch;
+        } else if (n == 0) {
+            break;  // 타임아웃
+        } else {
+            perror("read error");
+            return -1;
+        }
+    }
+    buffer[idx] = '\0';
+    return idx;
+}
+
 
 // 시리얼 포트에서 온습도 데이터 읽기
 int read_serial_data(int fd, WeatherData *data) {
-    char buffer[256];
-    int total_read = 0;
+    char buffer[256] = {0};
+    int len = read_line(fd, buffer, sizeof(buffer));
+    if (len <= 0) return -1;
 
-    while (1) {
-        int n = read(fd, buffer + total_read, sizeof(buffer) - 1 - total_read);
-        if (n < 0) {
-            perror("시리얼 읽기 오류");
-            return -1;
-        } else if (n == 0) {
-            // 읽을 데이터 없음, 타임아웃 등
-            break;
-        }
-        total_read += n;
-        buffer[total_read] = '\0';
+    printf("[DEBUG] 수신 문자열: %s\n", buffer);
 
-        // 개행 문자로 데이터 완성 판단 (줄 끝)
-        if (strchr(buffer, '\n') != NULL) {
-            break;
-        }
-        // 너무 길면 잘라내기
-        if (total_read >= sizeof(buffer) - 1) {
-            break;
-        }
-    }
-
-    // '\r'과 '\n' 제거
-    char *ptr = buffer;
-    while (*ptr) {
-        if (*ptr == '\r' || *ptr == '\n') {
-            *ptr = '\0';
-            break;
-        }
-        ptr++;
-    }
-
-    float tmp_in, hum_in;
-    if (sscanf(buffer, "%f, %f", &tmp_in, &hum_in) == 2) {
-        data->tmp_in = tmp_in;
-        data->hum_in = hum_in;
+    if (sscanf(buffer, "%f , %f", &data->tmp_in, &data->hum_in) == 2 || 
+        sscanf(buffer, "%f,%f", &data->tmp_in, &data->hum_in) == 2) {
         return 0;
     }
-
     return -1;
 }
 
