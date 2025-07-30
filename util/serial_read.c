@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include "weather_data.h"
 
-#define SERIAL_PROT "/dev/ttyUSB0"     // 아두이노가 연결된 포트 -> 내일 다시 확인 후 수정
+#define SERIAL_PROT "/dev/ttyACM0"     // 아두이노가 연결된 포트
 
 int read_serial_data(WeatherData *data) {
     int serial_port;
