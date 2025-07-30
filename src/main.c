@@ -36,9 +36,23 @@ int main() {
         // 현재 시간 정보 생성 -> DB에 저장할 거
         char timestamp[20];
         get_current_timestamp(timestamp, sizeof(timestamp));
+
+        WeatherData apiData;
         
         // API 호출 -> 날씨, 대기질 정보 가져오기
-        call_api(lat, lon);
+        // call_api(lat, lon);
+        if (call_api(lat, lon, &apiData) != 0) {
+        fprintf(stderr, "[ERROR] API 호출 실패\n");
+        sleep(300);
+        continue;
+        }
+
+        // 외부 데이터 복사
+        data.tmp_out = apiData.tmp_out;
+        data.hum_out = apiData.hum_out;
+        data.air.pm25 = apiData.air.pm25;
+        data.air.pm10 = apiData.air.pm10;
+        strcpy(data.weather_desc, apiData.weather_desc);
         
         // DB 저장 -> 파싱한 데이터, 타임스탬프 -> environment_data 테이블에 저장
         // MYSQL *conn, const char *timestamp, float tmp_in, float hum_in, float tmp_out, float hum_out, float pm25, float pm10, const char *weather_desc, int vent_status
@@ -48,9 +62,9 @@ int main() {
             // 디버깅 출력
             printf("[DEBUG] 시리얼 데이터 - tmp_in: %.2f, hum_in: %.2f, tmp_out: %.2f, hum_out: %.2f\n",
             data.tmp_in, data.hum_in, data.tmp_out, data.hum_out);
-            printf("[DEBUG] pm25: %.2f, pm10: %.2f\n", data.air.pm25, data.air.pm10);
-            printf("[DEBUG] 날씨 설명: %s\n", data.weather_desc);
-            printf("[DEBUG] vent_status: %d\n", vent_status);
+            // printf("[DEBUG] pm25: %.2f, pm10: %.2f\n", data.air.pm25, data.air.pm10);
+            // printf("[DEBUG] 날씨 설명: %s\n", data.weather_desc);
+            // printf("[DEBUG] vent_status: %d\n", vent_status);
             
             // 로그 메세지용 변수 선언
             char log_message[256];

@@ -96,6 +96,8 @@ int read_serial_data(int fd, WeatherData *data) {
         return 0;
     }
 
+    printf("[DEBUG] 시리얼 원본 데이터: %s\n", buffer);
+
     return -1;
 }
 
