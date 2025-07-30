@@ -8,7 +8,7 @@ typedef struct {
 
 typedef struct {
     float tmp_in;
-    int hum_in;
+    float hum_in;
     float tmp_out;
     float hum_out;
     char weather_desc[50];

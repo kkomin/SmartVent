@@ -94,7 +94,7 @@ int call_api(double lat, double lon) {
 
     // 날씨 데이터 호출 및 파싱
     if(fetch_api_data(weather_url, &response) == 0) {
-        printf("날씨 데이터 응답 : %s\n", response);
+        // printf("날씨 데이터 응답 : %s\n", response);
         parse_weather_json(response, &weather_data);
         free(response);
     } else {
@@ -103,7 +103,7 @@ int call_api(double lat, double lon) {
 
     // 미세먼지 데이터 호출 및 파싱
     if(fetch_api_data(air_url, &response) == 0) {
-        printf("미세먼지 데이터 응답 : %s\n", response);
+        // printf("미세먼지 데이터 응답 : %s\n", response);
         parse_air_json(response, &weather_data.air);
         free(response);
     } else {

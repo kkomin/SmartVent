@@ -8,6 +8,8 @@ int save_environment_data(MYSQL *conn, const char *timestamp, float tmp_in, floa
     "VALUES ('%s', %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, '%s', %d)",
     timestamp, tmp_in, hum_in, tmp_out, hum_out, pm25, pm10, weather_desc, vent_status);
 
+    printf("실행쿼리 : %s\n", query);
+
     if(mysql_query(conn, query)) {
         fprintf(stderr, "쿼리 실행 실패 : %s\n", mysql_error(conn));
         return -1;
