@@ -62,9 +62,6 @@ int main() {
             // 디버깅 출력
             printf("[DEBUG] 시리얼 데이터 - tmp_in: %.2f, hum_in: %.2f, tmp_out: %.2f, hum_out: %.2f\n",
             data.tmp_in, data.hum_in, data.tmp_out, data.hum_out);
-            // printf("[DEBUG] pm25: %.2f, pm10: %.2f\n", data.air.pm25, data.air.pm10);
-            // printf("[DEBUG] 날씨 설명: %s\n", data.weather_desc);
-            // printf("[DEBUG] vent_status: %d\n", vent_status);
             
             // 로그 메세지용 변수 선언
             char log_message[256];
