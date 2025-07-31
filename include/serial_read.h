@@ -3,16 +3,14 @@
 
 #include "weather_data.h"
 
-// int read_serial_data(WeatherData *data);
-
-// void serial_write(char status);
-
 int open_serial_port(const char *port_name);
 
 int read_serial_data(int fd, WeatherData *data);
 
-void serial_write(char status);
+void serial_write(int fd, char status);
 
 void close_serial_port(int fd);
+
+int read_line(int fd, char *buffer, size_t max_len);
 
 #endif

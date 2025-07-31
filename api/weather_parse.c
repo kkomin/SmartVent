@@ -22,8 +22,6 @@ void parse_weather_json(const char *json_str, WeatherData *weather_data) {
 
         weather_data->tmp_out = (float)tmp_c;
         weather_data->hum_out = humidity;
-        printf("현재 온도 : %.2f ℃\n", tmp_c);
-        printf("현재 습도 : %d\n", humidity);
     }
 
     // weather에서 description
@@ -32,8 +30,7 @@ void parse_weather_json(const char *json_str, WeatherData *weather_data) {
         cJSON *first_weather = cJSON_GetArrayItem(weather_arr, 0);
         char *description = cJSON_GetObjectItem(first_weather, "description")->valuestring;
         strncpy(weather_data->weather_desc, description, sizeof(weather_data->weather_desc)-1);
-        weather_data->weather_desc[sizeof(weather_data)->weather_desc - 1] = '\0';
-        printf("날씨 상태 : %s\n", description);
+        weather_data->weather_desc[sizeof(weather_data->weather_desc) - 1] = '\0';
     }
 
     // 도시 이름 출력

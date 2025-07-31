@@ -28,10 +28,6 @@ void parse_air_json(const char *json_str, AirData *air_data) {
             // 파싱한 값 구조체 변수에 저장
             air_data->pm25 = (float)pm2_5;
             air_data->pm10 = (float)pm10;
-
-            // 읽은 값 변수에 저장하거나 출력
-            printf("초미세먼지 : %.2f\n", pm2_5);
-            printf("미세먼지 : %.2f\n", pm10);
         }
     }
     // json 메모리 해제
