@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include "weather_data.h"
 
-#define SERIAL_PROT "/dev/ttyACM0"     // 아두이노가 연결된 포트
+#define SERIAL_PORT "/dev/ttyACM0"     // 아두이노가 연결된 포트
 
 // 시리얼 포트 열기 및 설정
 int open_serial_port(const char *port_name) {
@@ -72,51 +72,36 @@ int read_line(int fd, char *buffer, size_t max_len) {
 }
 
 
-// 시리얼 포트에서 온습도 데이터 읽기
 int read_serial_data(int fd, WeatherData *data) {
     char buffer[256] = {0};
+
     int len = read_line(fd, buffer, sizeof(buffer));
     if (len <= 0) return -1;
 
     printf("[DEBUG] 수신 문자열: %s\n", buffer);
 
-    if (sscanf(buffer, "%f, %f", &data->tmp_in, &data->hum_in) == 2 || 
-        sscanf(buffer, "%f,%f", &data->tmp_in, &data->hum_in) == 2) {
+    if (sscanf(buffer, "%f,%f", &data->tmp_in, &data->hum_in) == 2 ||
+        sscanf(buffer, "%f, %f", &data->tmp_in, &data->hum_in) == 2) {
         return 0;
     }
     return -1;
 }
 
 
-
-// 시리얼 포트에 상태 전송 (환기 상태 ON/OFF)
-void serial_write(char status) {
-    int serial_port = open(SERIAL_PROT, O_RDWR | O_NOCTTY );
-    if (serial_port < 0) {
-        perror("시리얼 포트 열기 실패\n");
+// 시리얼 포트로 환기 상태 전송
+void serial_write(int fd, char status) {
+    if (fd < 0) {
+        fprintf(stderr, "시리얼 포트가 열려있지 않습니다.\n");
         return;
     }
+    int n = write(fd, &status, 1);
+    if (n < 0) {
+        perror("시리얼 쓰기 실패");
+    }
+    
+    tcflush(fd, TCIFLUSH);  // 버퍼 비우기
 
-    // 시리얼 포트 속성 설정 (read와 동일하게 적용)
-    struct termios tty;
-    memset(&tty, 0, sizeof tty);
-    tcgetattr(serial_port, &tty);
-    cfsetispeed(&tty, B9600);
-    cfsetospeed(&tty, B9600);
-    tty.c_cflag |= (CLOCAL | CREAD);
-    tty.c_cflag &= ~CSIZE;
-    tty.c_cflag |= CS8;
-    tty.c_cflag &= ~PARENB;
-    tty.c_cflag &= ~CSTOPB;
-    tty.c_cflag &= ~CRTSCTS;
-    tty.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
-    tty.c_iflag &= ~(IXON | IXOFF | IXANY);
-    tty.c_oflag &= ~OPOST;
-    tcsetattr(serial_port, TCSANOW, &tty);
-
-    // 1바이트 전송
-    write(serial_port, &status, 1);
-    close(serial_port);
+    write(fd, &status, 1);  // 1바이트 전송
 }
 
 // 시리얼 포트 닫기

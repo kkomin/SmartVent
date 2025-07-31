@@ -7,7 +7,7 @@ int open_serial_port(const char *port_name);
 
 int read_serial_data(int fd, WeatherData *data);
 
-void serial_write(char status);
+void serial_write(int fd, char status);
 
 void close_serial_port(int fd);
 
