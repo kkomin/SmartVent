@@ -29,8 +29,8 @@ int open_serial_port(const char *port_name) {
     cfsetospeed(&tty, B9600);
     tcsetattr(fd, TCSANOW, &tty);
 
-    tty.c_cc[VMIN] = 0;      // 최소 0 바이트 읽기 (비차단)
-    tty.c_cc[VTIME] = 10;    // 1초(10*0.1s) 타임아웃
+    tty.c_cc[VMIN] = 1;      // 최소 1 바이트 읽기 (비차단)
+    tty.c_cc[VTIME] = 20;    // 2초(20*0.1s) 타임아웃
 
     tty.c_cflag |= (CLOCAL | CREAD);
     tty.c_cflag &= ~CSIZE;
@@ -102,6 +102,7 @@ void serial_write(int fd, char status) {
     tcflush(fd, TCIFLUSH);  // 버퍼 비우기
 
     write(fd, &status, 1);  // 1바이트 전송
+    tcdrain(fd);
 }
 
 // 시리얼 포트 닫기
