@@ -42,6 +42,7 @@
 <img width="409" height="297" alt="image" src="https://github.com/user-attachments/assets/671a92a4-710d-4c12-a623-3ef32043e8d7" />
 
 <br/>
+<br/>
 
 ## 요구사항
 
