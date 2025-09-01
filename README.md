@@ -36,6 +36,8 @@
 - 조건 충족 시 환기 상태를 LED 및 시뮬레이션 메시지로 표시
 - 웹 UI를 통해 온습도, 외부 날씨, 환기 상태 시각화
 
+<br/>
+
 ### 순서도
 <img width="409" height="297" alt="image" src="https://github.com/user-attachments/assets/671a92a4-710d-4c12-a623-3ef32043e8d7" />
 
