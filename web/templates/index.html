@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>스마트 환경 대시보드</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>회의실 환경 모니터링</h1>
+    <p>시간: {{ data.timestamp }}</p>
+    <p>실내 온도: {{ data.tmp_in }} ℃</p>
+    <p>실내 습도: {{ data.hum_in }} %</p>
+    <p>실외 온도: {{ data.tmp_out }} ℃</p>
+    <p>실외 습도: {{ data.hum_out }} %</p>
+    <p>환기 상태: <span class="{{ 'on' if data.vent_status else 'off' }}">
+        {{ 'ON' if data.vent_status else 'OFF' }}
+    </span></p>
+</body>
+</html>
