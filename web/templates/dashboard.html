@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>SmartVent 실시간 대시보드</title>
+    <style>
+        body { font-family: 'NanumSquare', sans-serif; background: #f8f9fa; text-align: center; padding-top: 50px; }
+        .card { display: inline-block; background: white; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+                margin: 20px; padding: 30px; width: 280px; }
+        h2 { margin-bottom: 10px; }
+        .on { color: green; font-weight: bold; }
+        .off { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>실시간 SmartVent 환경 모니터링</h1>
+
+    <div id="data-container">
+        <div class="card">
+            <h2>실내 환경</h2>
+            <p>온도: <span id="tmp_in">-</span> ℃</p>
+            <p>습도: <span id="hum_in">-</span> %</p>
+        </div>
+
+        <div class="card">
+            <h2>실외 환경</h2>
+            <p>온도: <span id="tmp_out">-</span> ℃</p>
+            <p>습도: <span id="hum_out">-</span> %</p>
+            <p>날씨: <span id="weather_desc">-</span></p>
+        </div>
+
+        <div class="card">
+            <h2>환기 상태</h2>
+            <p>현재 상태: <span id="vent_status" class="off">OFF</span></p>
+            <p>최근 갱신 시각: <span id="timestamp">-</span></p>
+        </div>
+    </div>
+
+    <script>
+        async function fetchLatestData() {
+            const res = await fetch('/api/latest');
+            const data = await res.json();
+
+            document.getElementById('tmp_in').textContent = data.tmp_in.toFixed(1);
+            document.getElementById('hum_in').textContent = data.hum_in.toFixed(1);
+            document.getElementById('tmp_out').textContent = data.tmp_out.toFixed(1);
+            document.getElementById('hum_out').textContent = data.hum_out.toFixed(1);
+            document.getElementById('weather_desc').textContent = data.weather_desc;
+            document.getElementById('timestamp').textContent = data.timestamp;
+
+            const ventStatusEl = document.getElementById('vent_status');
+            if (data.vent_status === 1) {
+                ventStatusEl.textContent = "ON";
+                ventStatusEl.className = "on";
+            } else {
+                ventStatusEl.textContent = "OFF";
+                ventStatusEl.className = "off";
+            }
+        }
+
+        // 5초마다 자동 갱신
+        setInterval(fetchLatestData, 5000);
+
+        // 페이지 로드시 즉시 1회 호출
+        fetchLatestData();
+    </script>
+</body>
+</html>
