@@ -99,8 +99,19 @@
         async function fetchHistoryData() {
             const res = await fetch('/api/history');
             const data = await res.json();
+            
+            if (data.length === 0) return;
 
-            const labels = data.map(d => d.timestamp.slice(11,16)); // 시:분만 표시
+            // 날짜 제목용
+            const dateTitle = data[0].timestamp.slice(0, 10);
+
+            const labels = data.map(row => {
+                const date = new Date(row.timestamp);
+                return `${date.getHours().toString().padStart(2, '0')}:${date
+                .getMinutes()
+                .toString()
+                .padStart(2, '0')}`;
+            });
             const tmp_in = data.map(d => d.tmp_in);
             const tmp_out = data.map(d => d.tmp_out);
             const hum_in = data.map(d => d.hum_in);
@@ -115,7 +126,26 @@
                         { label: '실외 온도', data: tmp_out, borderColor: 'orange', fill: false }
                     ]
                 },
-                options: { responsive: false, plugins: { legend: { position: 'bottom' } } }
+                options: {
+                    responsive: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        title: {
+                            display: true,
+                            text: `${dateTitle} 온도 변화 그래프`,
+                            font: { size: 16, weight: 'bold' },
+                            color: '#333'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: '시간 (시:분)' }
+                        },
+                        y: {
+                            title: { display: true, text: '온도(°C)' }
+                        }
+                    }
+                }
             });
 
             new Chart(document.getElementById('humChart'), {
@@ -127,7 +157,26 @@
                         { label: '실외 습도', data: hum_out, borderColor: 'skyblue', fill: false }
                     ]
                 },
-                options: { responsive: false, plugins: { legend: { position: 'bottom' } } }
+                options: {
+                    responsive: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        title: {
+                            display: true,
+                            text: `${dateTitle} 습도 변화 그래프`,
+                            font: { size: 16, weight: 'bold' },
+                            color: '#333'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: { display: true, text: '시간 (시:분)' }
+                        },
+                        y: {
+                            title: { display: true, text: '습도(%)' }
+                        }
+                    }
+                }
             });
         }
 
