@@ -63,7 +63,7 @@
         <div class="card">
             <h2>환기 상태</h2>
             <p>현재 상태: <span id="vent_status" class="off">OFF</span></p>
-            <button id="toggle"></button>
+            <button id="toggle">환기 ON/OFF</button>
             <p>최근 갱신 시각: <span id="timestamp">-</span></p>
         </div>
 
@@ -97,38 +97,38 @@
         }
 
         async function fetchHistoryData() {
-        const res = await fetch('/api/history');
-        const data = await res.json();
+            const res = await fetch('/api/history');
+            const data = await res.json();
 
-        const labels = data.map(d => d.timestamp.slice(11,16)); // 시:분만 표시
-        const tmp_in = data.map(d => d.tmp_in);
-        const tmp_out = data.map(d => d.tmp_out);
-        const hum_in = data.map(d => d.hum_in);
-        const hum_out = data.map(d => d.hum_out);
+            const labels = data.map(d => d.timestamp.slice(11,16)); // 시:분만 표시
+            const tmp_in = data.map(d => d.tmp_in);
+            const tmp_out = data.map(d => d.tmp_out);
+            const hum_in = data.map(d => d.hum_in);
+            const hum_out = data.map(d => d.hum_out);
 
-        new Chart(document.getElementById('tempChart'), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: '실내 온도', data: tmp_in, borderColor: 'red', fill: false },
-                    { label: '실외 온도', data: tmp_out, borderColor: 'orange', fill: false }
-                ]
-            },
-            options: { responsive: false, plugins: { legend: { position: 'bottom' } } }
-        });
+            new Chart(document.getElementById('tempChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: '실내 온도', data: tmp_in, borderColor: 'red', fill: false },
+                        { label: '실외 온도', data: tmp_out, borderColor: 'orange', fill: false }
+                    ]
+                },
+                options: { responsive: false, plugins: { legend: { position: 'bottom' } } }
+            });
 
-        new Chart(document.getElementById('humChart'), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [
-                    { label: '실내 습도', data: hum_in, borderColor: 'blue', fill: false },
-                    { label: '실외 습도', data: hum_out, borderColor: 'skyblue', fill: false }
-                ]
-            },
-            options: { responsive: false, plugins: { legend: { position: 'bottom' } } }
-        });
+            new Chart(document.getElementById('humChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: '실내 습도', data: hum_in, borderColor: 'blue', fill: false },
+                        { label: '실외 습도', data: hum_out, borderColor: 'skyblue', fill: false }
+                    ]
+                },
+                options: { responsive: false, plugins: { legend: { position: 'bottom' } } }
+            });
         }
 
         // 5초마다 자동 갱신
@@ -139,6 +139,28 @@
 
         // 페이지 로드 시 그래프 생성
         fetchHistoryData();
+
+        // 사용자 수동 환기 이벤트
+        document.getElementById('toggle').addEventListener('click', async () => {
+        // 현재 상태 확인
+        const ventEl = document.getElementById('vent_status');
+        const newStatus = ventEl.className === "on" ? 0 : 1;
+
+        // 서버로 POST 요청 보내기
+        const res = await fetch('/api/vent', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({vent_status: newStatus})
+        });
+
+        if(res.ok) {
+            // 갱신 후 최신 데이터 다시 가져오기
+            fetchLatestData();
+            alert("환기 상태가 업데이트되었습니다.");
+        } else {
+            alert("환기 상태 변경에 실패했습니다.");
+        }
+    });
     </script>
 </body>
 </html>
