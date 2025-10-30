@@ -34,5 +34,25 @@ def get_latest_data():
 
     return jsonify(data)
 
+# 그래프용 API 추가
+@app.route('/api/history')
+def get_history_data():
+    conn = mysql.connector.connect(**db_config)
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT timestamp, tmp_in, hum_in, tmp_out, hum_out
+        FROM environment_data
+        ORDER BY timestamp DESC
+        LIMIT 20
+    """)
+    rows = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    # 최신순으로 가져왔으니 역순으로 돌려줌
+    return jsonify(list(reversed(rows)))
+
 if __name__ == '__main__':
     app.run(debug=True)
